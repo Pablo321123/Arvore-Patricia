@@ -9,7 +9,7 @@
  **/
 // --------------------------------------------------------------+
 
-public class testPatricia {
+public class TestPatricia {
     public static void main(String[] args) {
         ArvorePatricia ap = new ArvorePatricia(128);
 
