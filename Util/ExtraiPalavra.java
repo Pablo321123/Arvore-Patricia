@@ -21,6 +21,10 @@ public class ExtraiPalavra {
         mapaTexto = new HashMap<String, ItemPatricia>();
 
     }
+    
+    public HashMap<String, ItemPatricia> getMapaTexto(){
+    	return this.mapaTexto;
+    }
 
     public String proximaPalavra() throws Exception {
         if (palavras == null || !palavras.hasMoreTokens()) {
@@ -46,13 +50,52 @@ public class ExtraiPalavra {
         String palavraEmBinario = "";
         byte[] charsPalavra = new byte[n];
         palavra.getBytes(0, n, charsPalavra, 0);
+        
 
         for (byte b : charsPalavra) {
             // System.out.println(b);
-            palavraEmBinario += Integer.toBinaryString(b);
+        	//transforma todos os caracteres em sequencias de 8 bits antes de formar a palavra
+        	String caracterEm8bits = setCaracter8bits(Integer.toBinaryString(b)); 
+            palavraEmBinario += caracterEm8bits;
         }
-
+        //metodo para colocar todas as palavras no formato de 16 caracteres
+        palavraEmBinario = setPalavra16caracteres(palavraEmBinario);
         return palavraEmBinario;
+    }
+    
+    //coloca a palavra, ja em bcd, no formato de 16 caracteres
+    public String setPalavra16caracteres(String palavra) {
+    	if(palavra.length() < 128) { //palavras < 16 : preenche com 0 ao final
+    		String aux = palavra.concat("0");
+    		return setPalavra16caracteres(aux);
+    	}
+    	else if(palavra.length() > 128) { //palavras> 16: remove os bits do final que excedem o limite de 128 bits
+    		String aux = palavra.substring(0, 127);
+    		return aux;
+    	}
+    	else {
+    		return palavra;
+    	}
+    	
+    }
+    
+    //coloca todas as strings de bits de cada caracter no formato de 8 bits
+    public String setCaracter8bits(String sequencia){
+    	if(sequencia.length() < 8){
+    		String aux = "0";
+    		aux = aux.concat(sequencia);
+    		return setCaracter8bits(aux);
+    	}
+    	else if(sequencia.length() > 8) {
+    		String aux = sequencia.substring(sequencia.length() - 8);
+    		//System.out.println(sequencia);
+    		return aux;
+    	}
+    	else{
+    		//System.out.println(sequencia);
+    		return sequencia;
+    	}
+    	
     }
 
     public void converteTextoParaBinario() {
@@ -62,7 +105,8 @@ public class ExtraiPalavra {
             while ((palavra = proximaPalavra()) != null) {
                 System.out.println("Palavra" + (i) + ": " + palavra);
                 palavraBinaria = convertePalavraParaBinario(palavra);
-
+                
+                
                 if (mapaTexto.get(palavraBinaria) != null) {
                     mapaTexto.get(palavraBinaria).addListaOcorrencia(i);
                 } else {
@@ -70,14 +114,33 @@ public class ExtraiPalavra {
                 }
                 i++;
             }
-
-            System.out.println(
-                    mapaTexto.get("111001111011111101100110100111000111101001111010011011111110101")
-                            .getListaOcorrencia());
+            
+            //System.out.println(mapaTexto.get("0100000101000010").getListaOcorrencia());
+            
 
             fecharArquivos();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+        
+    }
+    
+    public void buscaPalavra(String palavraString) {
+    	String palavraBCD = this.convertePalavraParaBinario(palavraString);
+    	
+    	if(mapaTexto.get(palavraBCD) == null) {
+    		System.out.println("palavra não encontrada no texto");
+    	}
+    	else {
+    		System.out.println("palavra encontrada no texto");
+    	}
+    	
+    	System.out.println(mapaTexto.get(palavraBCD).getListaOcorrencia());
+    			
+    }
+    
+    public void inserePalavraNaArvore(String palavraBCD) {
+    	
+    	
     }
 }
