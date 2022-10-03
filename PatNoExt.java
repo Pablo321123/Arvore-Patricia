@@ -1,3 +1,7 @@
+import Util.ItemPatricia;
+
 public class PatNoExt extends PatNo{
-    char chave; //Virara String
+    char chave; 
+    String chave_str;
+    ItemPatricia ip;
 }

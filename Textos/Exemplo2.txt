@@ -1,6 +1,5 @@
 A etica na computacao
 
-
 Introducao ? O que e etica?
 
       A evolucao das tecnicas computacionais e o crescimento da popularidade da informatica na sociedade tem causado o aumento das discussoes sobre etica na computacao. Mas o significado da palavra etica tem confundido muitos ao ser comparado com o significado de moral. Moral e aplicada quando se quer ditar regras de conduta a uma pessoa ou a um grupo. Etica e a ciencia que estuda as varias morais, comparando-as e verificando se sao legitimas, se nao sao influenciadas, se realmente sao modelos de referencia para a tomada de decisoes.

@@ -1,3 +1,7 @@
+import Util.ExtraiPalavra;
+import Util.ItemPatricia;
+import Util.Cores;
+
 /* --------------------------------------------------------------+
  * Trabalho de AEDS II - Implementação da Árvore Patricia
  * --------------------------------------------------------------+ */
@@ -9,31 +13,29 @@
  **/
 // --------------------------------------------------------------+
 
-public class ArvorePatricia {
+public class ArvorePatriciaString {
 
     private PatNo raiz;
-    private int nbitsChave, contador = 0;
+    private int nbitsChave;
 
     /**
      * @param nbitsChave - 128 bits para caracteres ASCII
      */
-    public ArvorePatricia(int nbitsChave) {
+    public ArvorePatriciaString(int nbitsChave) {
         this.raiz = null;
         this.nbitsChave = nbitsChave;
     }
 
     // Retorna o i-ésimo bit da chave k a partir da esquerda
-    private int bit(int i, char k) {
+    private int bit(int i, String k) {
         if (i == 0) {
             return 0;
         }
 
-        int c = (int) k;
-
-        for (int j = 1; j <= this.nbitsChave - i; j++) {
-            c = c / 2;
-        }
-        return c % 2;
+        // Retorna o bit na posicao i (do mais significativo para o menos
+        // significatrivo) *Esquerda -> Direita
+        int bitDeComparacao = (k.charAt(i - 1) - 48);
+        return bitDeComparacao;
     }
 
     // Verifica se p é nó externo
@@ -52,68 +54,42 @@ public class ArvorePatricia {
     }
 
     // Método para criar nó externo
-    private PatNo criaNoExt(char k) {
+    private PatNo criaNoExt(String k, ItemPatricia ip) {
         PatNoExt p = new PatNoExt();
-        p.chave = k;
+        p.chave_str = k;
+        p.ip = ip;
         return p;
     }
 
     // Método para pesquisa:
-
-    public void pesquisa(char k) {
-        this.pesquisa(k, this.raiz);
+    public void pesquisa(String k, ExtraiPalavra ep) {
+        this.pesquisa(k, this.raiz, ep);
     }
 
-    public void pesquisaPalavra(char k) {
-        this.pesquisaPalavra(k, this.raiz);
-    }
+    private void pesquisa(String k, PatNo t, ExtraiPalavra ep) {
 
-    private void pesquisa(char k, PatNo t) {
+        String k_convertido = ep.convertePalavraParaBinario(k);
+
         if (this.eExterno(t)) {
             PatNoExt aux = (PatNoExt) t;
-            if (aux.chave == k) {
-                System.out.println("Elemento encontrado");
+            if (aux.chave_str.equals(k_convertido)) {
+                System.out.println("\n" + Cores.ANSI_YELLOW + "Elemento '" + Cores.ANSI_GREEN + aux.ip.getChave()
+                        + Cores.ANSI_YELLOW + "' encontrado" + Cores.ANSI_RESET);
+
+                System.out.println(Cores.ANSI_YELLOW + "Este elemento tem ocorrencia nas posicao(oes): " + Cores.ANSI_GREEN
+                        + aux.ip.getListaOcorrencia() + Cores.ANSI_RESET + "\n");
             } else {
-                System.out.println("Elemento nao encontrado");
+                System.out.println(Cores.ANSI_RED + "Elemento nao encontrado" + Cores.ANSI_RESET);
             }
         } else {
             PatNoInt aux = (PatNoInt) t;
-            if (this.bit(aux.index, k) == 0) {
-                pesquisa(k, aux.esq);
+
+            if (this.bit(aux.index, k_convertido) == 0) {
+                pesquisa(k, aux.esq, ep);
             } else {
-                pesquisa(k, aux.dir);
+                pesquisa(k, aux.dir, ep);
             }
         }
-    }
-
-    private void pesquisaPalavra(char k, PatNo t) {
-        if (this.eExterno(t)) {
-            PatNoExt aux = (PatNoExt) t;
-            if (aux.chave == k) {
-                System.out.println("Elemento encontrado");
-                contador++;
-            } else {
-                System.out.println("Elemento nao encontrado");
-                setContador();
-                System.exit(1); // arrumar aqui (dar um jeito de parar a busca quando nao encontrar o elemento
-            }
-        } else {
-            PatNoInt aux = (PatNoInt) t;
-            if (this.bit(aux.index, k) == 0) {
-                pesquisaPalavra(k, aux.esq);
-            } else {
-                pesquisaPalavra(k, aux.dir);
-            }
-        }
-    }
-
-    public void setContador() {
-        this.contador = 0;
-    }
-
-    // Metodos para inserção
-    public void insere(char k) {
-        this.raiz = this.insere(k, this.raiz);
     }
 
     /**
@@ -121,13 +97,13 @@ public class ArvorePatricia {
      * @param t - Nó de inserção
      * @param i - valor do nó (bit de comparação)
      */
-    private PatNo insereEntre(char k, PatNo t, int i) {
+    private PatNo insereEntre(String k, PatNo t, int i, ItemPatricia ip) {
         PatNoInt aux = null;
         if (!this.eExterno(t)) {
             aux = (PatNoInt) t;
         }
         if (this.eExterno(t) || (i < aux.index)) { // Cria um novo nó externo
-            PatNo p = this.criaNoExt(k);
+            PatNo p = this.criaNoExt(k, ip);
             if (this.bit(i, k) == 1) {
                 return this.criaNoInt(i, t, p);
             } else {
@@ -135,17 +111,17 @@ public class ArvorePatricia {
             }
         } else {
             if (this.bit(aux.index, k) == 1) {
-                aux.dir = this.insereEntre(k, aux.dir, i);
+                aux.dir = this.insereEntre(k, aux.dir, i, ip);
             } else {
-                aux.esq = this.insereEntre(k, aux.esq, i);
+                aux.esq = this.insereEntre(k, aux.esq, i, ip);
             }
             return aux;
         }
     }
 
-    private PatNo insere(char k, PatNo t) {
+    private PatNo insere(String k, PatNo t, ItemPatricia ip) {
         if (t == null) {
-            return this.criaNoExt(k);
+            return this.criaNoExt(k, ip);
         } else {
 
             // Alterar
@@ -163,16 +139,21 @@ public class ArvorePatricia {
             PatNoExt aux = (PatNoExt) p;
             int i = 1; // acha o primeiro bit diferente
             while ((i <= this.nbitsChave) &&
-                    (this.bit(i, k) == this.bit(i, aux.chave))) {
+                    (this.bit(i, k) == this.bit(i, aux.chave_str))) {
                 i++;
             }
             if (i > this.nbitsChave) {
                 System.out.println("Erro : chave ja esta na arvore");
                 return t;
             } else {
-                return this.insereEntre(k, t, i);
+                return this.insereEntre(k, t, i, ip);
             }
         }
+    }
+
+    // Metodos para inserção
+    public void insere(String k, ItemPatricia ip) {
+        this.raiz = this.insere(k, this.raiz, ip);
     }
 
 }
