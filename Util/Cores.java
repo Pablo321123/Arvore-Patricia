@@ -7,4 +7,5 @@ public class Cores {
     public static final String ANSI_GREEN = "\u001B[32m";
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String GREEN = "\033[0;32m"; // GREEN
+    public static final String PINK = "\u001B[35m";
 }

@@ -15,7 +15,6 @@ public class ExtraiPalavra {
             throws Exception {
         this.arqDelim = new BufferedReader(new FileReader(nomeArqDelim));
         this.arqTxt = new BufferedReader(new FileReader(nomeArqTxt));
-        // @{\it Os delimitadores devem estar juntos em uma \'unica linha do arquivo}@
         this.delimitadores = arqDelim.readLine() + "\r\n";
         this.palavras = null;
         mapaTexto = new HashMap<String, ItemPatricia>();
@@ -30,17 +29,17 @@ public class ExtraiPalavra {
             }
             this.palavras = new StringTokenizer(linha, this.delimitadores);
             if (!palavras.hasMoreTokens())
-                return ""; // @{\it ignora delimitadores}@
+                return ""; //it ignora delimitadores}
         }
         return this.palavras.nextToken();
     }
 
-    // coloca a palavra, ja em bcd, no formato de 16 caracteres
+    // Coloca a palavra, ja em bcd, no formato de 16 caracteres
     public String setPalavra16caracteres(String palavra) {
-        if (palavra.length() < 128) { // palavras < 16 : preenche com 0 ao final
+        if (palavra.length() < 128) { // palavra < 16 : preenche com 0 ao final
             String aux = palavra.concat("0");
             return setPalavra16caracteres(aux);
-        } else if (palavra.length() > 128) { // palavras> 16: remove os bits do final que excedem o limite de 128 bits
+        } else if (palavra.length() > 128) { // palavra > 16: remove os bits do final que excedem o limite de 128 bits
             String aux = palavra.substring(0, 127);
             return aux;
         } else {
@@ -49,7 +48,7 @@ public class ExtraiPalavra {
 
     }
 
-    // coloca todas as strings de bits de cada caracter no formato de 8 bits
+    // Coloca todas as strings de bits de cada caracter no formato de 8 bits
     public String setCaracter8bits(String sequencia) {
         if (sequencia.length() < 8) {
             String aux = "0";
@@ -57,10 +56,8 @@ public class ExtraiPalavra {
             return setCaracter8bits(aux);
         } else if (sequencia.length() > 8) {
             String aux = sequencia.substring(sequencia.length() - 8);
-            // System.out.println(sequencia);
             return aux;
         } else {
-            // System.out.println(sequencia);
             return sequencia;
         }
 
@@ -75,13 +72,11 @@ public class ExtraiPalavra {
         palavra.getBytes(0, n, charsPalavra, 0);
 
         for (byte b : charsPalavra) {
-            // System.out.println(b);
             // transforma todos os caracteres em sequencias de 8 bits antes de formar a
             // palavra
             String caracterEm8bits = setCaracter8bits(Integer.toBinaryString(b));
             palavraEmBinario += caracterEm8bits;
         }
-        // metodo para colocar todas as palavras no formato de 16 caracteres
         palavraEmBinario = setPalavra16caracteres(palavraEmBinario);
         return palavraEmBinario;
     }
@@ -106,8 +101,6 @@ public class ExtraiPalavra {
                 i++;
             }
 
-            // System.out.println(mapaTexto.get("0100000101000010").getListaOcorrencia());
-
             fecharArquivos();
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -115,7 +108,7 @@ public class ExtraiPalavra {
 
     }
 
-    // Metodo para testar a conscitencia da extracao de palavreas do texto
+    // Metodo para testar a consistencia da extracao de palavreas do texto
     public void buscaPalavra(String palavraString) {
         String palavraBCD = this.convertePalavraParaBinario(palavraString);
 

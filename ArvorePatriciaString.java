@@ -33,7 +33,7 @@ public class ArvorePatriciaString {
         }
 
         // Retorna o bit na posicao i (do mais significativo para o menos
-        // significatrivo) *Esquerda -> Direita
+        // significativo) *Esquerda -> Direita
         int bitDeComparacao = (k.charAt(i - 1) - 48);
         return bitDeComparacao;
     }
@@ -124,7 +124,6 @@ public class ArvorePatriciaString {
             return this.criaNoExt(k, ip);
         } else {
 
-            // Alterar
             PatNo p = t;
             while (!this.eExterno(p)) {
                 PatNoInt aux = (PatNoInt) p;

@@ -12,7 +12,7 @@
 public class ArvorePatricia {
 
     private PatNo raiz;
-    private int nbitsChave, contador = 0;
+    private int nbitsChave;
 
     /**
      * @param nbitsChave - 128 bits para caracteres ASCII
@@ -91,11 +91,9 @@ public class ArvorePatricia {
             PatNoExt aux = (PatNoExt) t;
             if (aux.chave == k) {
                 System.out.println("Elemento encontrado");
-                contador++;
             } else {
                 System.out.println("Elemento nao encontrado");
-                setContador();
-                System.exit(1); // arrumar aqui (dar um jeito de parar a busca quando nao encontrar o elemento
+                System.exit(1); 
             }
         } else {
             PatNoInt aux = (PatNoInt) t;
@@ -105,10 +103,6 @@ public class ArvorePatricia {
                 pesquisaPalavra(k, aux.dir);
             }
         }
-    }
-
-    public void setContador() {
-        this.contador = 0;
     }
 
     // Metodos para inserção
@@ -148,7 +142,6 @@ public class ArvorePatricia {
             return this.criaNoExt(k);
         } else {
 
-            // Alterar
             PatNo p = t;
             while (!this.eExterno(p)) {
                 PatNoInt aux = (PatNoInt) p;
