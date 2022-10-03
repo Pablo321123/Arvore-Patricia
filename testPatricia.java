@@ -57,7 +57,7 @@ public class TestPatricia {
 
 			realizarPesquisa(NBITSCHAVE, palavra);
 
-			System.out.println(Cores.ANSI_GREEN + "Deseja procurar outra palavra?\n" + Cores.ANSI_GREEN + "1 - Sim\n"
+			System.out.println(Cores.ANSI_YELLOW + "Deseja procurar outra palavra?\n" + Cores.ANSI_GREEN + "1 - Sim\n"
 					+ Cores.ANSI_RED + "2 - Nao" + Cores.ANSI_RESET);
 
 			continuaPesquisa = myObj.nextInt() == 1 ? true : false;
